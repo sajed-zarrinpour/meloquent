@@ -26,7 +26,7 @@ final class RelationFieldInfoDto
         $this->ownerPrimaryKey = $ownerPrimaryKey;
         $this->foreignKeyOnOrigin = $foreignKeyOnOrigin;
         $this->relationPath = $relationPath;
-        $this->resolver = $resolver;
+        $this->resolver = $resolver ?? $this->makeResolver();
     }
 
     public static function fromArray(array $a): self
@@ -36,7 +36,7 @@ final class RelationFieldInfoDto
             $a['owner_primary_key'],
             $a['foreign_key_on_origin'] ?? null,
             $a['relation_path'] ?? [],
-            $a['resolver'] ?? null
+            $a['resolver'] ?? null,
         );
     }
 
@@ -49,6 +49,11 @@ final class RelationFieldInfoDto
             'relation_path' => $this->relationPath,
             'resolver' => $this->resolver,
         ];
+    }
+
+    public function resolver($argc)
+    {
+        return ($this->resolver)($argc);
     }
 
     /**
