@@ -1,16 +1,20 @@
 <?php
 namespace SajedZarinpour\Meloquent\DTOs;
 
+use SajedZarinpour\Meloquent\Concerns\hasCallableProperty;
+
 use Closure;
 
 final class RelationFieldInfoDto
 {
+    use hasCallableProperty; // to treat callable property `resolver` as method
+    
     public string $ownerModelClass;
     public string $ownerPrimaryKey;
     public ?string $foreignKeyOnOrigin;
     /** @var string[] */
     public array $relationPath;
-    public ?Closure $resolver; // optional callable to resolve values
+    public ?Closure $resolver; // callable to resolve values
 
     /**
      * @param string[] $relationPath
@@ -51,10 +55,6 @@ final class RelationFieldInfoDto
         ];
     }
 
-    public function resolver($argc)
-    {
-        return ($this->resolver)($argc);
-    }
 
     /**
      * Example: returns a Closure that, given an origin model instance,
@@ -79,10 +79,12 @@ final class RelationFieldInfoDto
                         try {
                             $current = $current->getResults(); // may execute query
                         } catch (\Throwable $e) {
+                            print_r($e->getMessage());
                             $current = null;
                         }
                     }
                 } else {
+                    print_r('methos not found'. $current);
                     return null;
                 }
 
