@@ -1,0 +1,41 @@
+{
+    "name": "sajed-zarinpour/meloquent",
+    "description": "provides extra functionality for elloquent",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "library",
+        "mellonquent"
+    ],
+    "homepage": "",
+    "support": {
+    },
+    "autoload": {
+        "psr-4": {
+            "SajedZarinpour\\Meloquent\\": "src/"
+        },
+        "files": [
+            "src/Helpers/helpers.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Sajed Zarinpour",
+            "email": "sajed.zarinpour@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SajedZarinpour\\Meloquent\\Providers\\MeloquentServiceProvider"
+            ],
+            "aliases": {
+                "Meloquent": "SajedZarinpour\\Meloquent\\Facades\\Meloquent"
+            }
+        }
+    },
+    "require": {
+        "ext-curl": "*"
+    }
+    
+}
