@@ -65,7 +65,7 @@ final class RelationFieldInfoDto
         return $this->resolver ?? function ($originModel) {
             $current = $originModel;
             foreach ($this->relationPath as $rel) {
-                if (! $current) return null;
+                if (empty($current)) continue;
                 // prefer loaded relation first, then call relation method
                 if ($current->relationLoaded($rel)) {
                     $current = $current->getRelation($rel);
@@ -79,12 +79,12 @@ final class RelationFieldInfoDto
                         try {
                             $current = $current->getResults(); // may execute query
                         } catch (\Throwable $e) {
-                            print_r($e->getMessage());
+                            $this->throws($e->getMessage());
                             $current = null;
                         }
                     }
                 } else {
-                    print_r('methos not found'. $current);
+                    $this->throws('methos not found'. $current);
                     return null;
                 }
 

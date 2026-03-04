@@ -1,11 +1,10 @@
 <?php
 namespace SajedZarinpour\Meloquent\Concerns;
 
-use Exception;
-use ReflectionFunction;
 use ReflectionProperty;
 
 trait hasCallableProperty {
+    use reportsError;
     /**
      * say you have a property like the following in your class:
      *      public Closure $hello;
@@ -22,7 +21,8 @@ trait hasCallableProperty {
             // try with an invokable class as the callable property and you'll see the difference
         } else {
             // Note: value of $name is case sensitive.
-            throw new Exception("Calling inaccessible object method '$name', params: " . implode(', ', $arguments). "\n");
+            // throw new Exception("Calling inaccessible object method '$name', params: " . implode(', ', $arguments). "\n");
+            $this->throws("Calling inaccessible object method '$name', params: " . implode(', ', $arguments). "\n");
         }
     }
 
@@ -41,7 +41,7 @@ trait hasCallableProperty {
             return ($property)(...$arguments);
         } else {
             // Note: value of $name is case sensitive.
-            throw new Exception("Calling inaccessible static method '$name' ". implode(', ', $arguments). "\n");
+            static::throws("Calling inaccessible static method '$name' ". implode(', ', $arguments). "\n");
         }
     }
 }
