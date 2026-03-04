@@ -2,6 +2,7 @@
 namespace SajedZarinpour\Meloquent\Concerns;
 
 use Exception;
+use ReflectionFunction;
 use ReflectionProperty;
 
 trait hasCallableProperty {
@@ -15,6 +16,10 @@ trait hasCallableProperty {
     {
         if(is_callable($this->$name)) {
             return ($this->$name)(...$arguments);
+            // not the same as: 
+            //   $function = new ReflectionFunction($this->$name);
+            //   return $function->invokeArgs($arguments);
+            // try with an invokable class as the callable property and you'll see the difference
         } else {
             // Note: value of $name is case sensitive.
             throw new Exception("Calling inaccessible object method '$name', params: " . implode(', ', $arguments). "\n");
