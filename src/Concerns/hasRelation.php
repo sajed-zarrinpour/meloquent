@@ -1,6 +1,6 @@
 <?php
 
-namespace SajedZarinpour\Meloquent\traits;
+namespace SajedZarinpour\Meloquent\Concerns;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -67,7 +67,7 @@ trait hasRelation {
     /**
      * returns a complete categorized list of relations of a model, regardless of wwhether the relation is eager loaded or not.
      */
-    public function getRelations($type = null) : array
+    public function getCategorizedRelations($type = null) : array
     {
         return meloquent($this->getPriorityTable())->getAllRelations($this, $type);
     }
