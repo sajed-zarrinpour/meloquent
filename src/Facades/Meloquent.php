@@ -23,9 +23,4 @@ class Meloquent extends Facade
     {
       return MeloquentClass::class;
     }
-
-    public static function resolved(Closure $callback)
-    {
-      return parent::resolved($callback);
-    }
 }
