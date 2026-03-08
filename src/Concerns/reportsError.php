@@ -3,7 +3,7 @@ namespace SajedZarinpour\Meloquent\Concerns;
 
 use Exception;
 
-trait reportsError {
+trait ReportsError {
 
     public static function throws($errorMessage) {
         $trace = debug_backtrace();

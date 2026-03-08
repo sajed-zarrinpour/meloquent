@@ -7,7 +7,7 @@ use Closure;
 
 final class RelationFieldInfoDto
 {
-    use hasCallableProperty; // to treat callable property `resolver` as method
+    use HasCallableProperty; // to treat callable property `resolver` as method
     
     public string $ownerModelClass;
     public string $ownerPrimaryKey;

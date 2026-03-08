@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use ReflectionProperty;
 
-trait hasRelation {
+trait HasRelation {
     
     /**
      * gets the value of the field on the model similar to data_get,

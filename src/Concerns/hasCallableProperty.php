@@ -1,9 +1,11 @@
 <?php
 namespace SajedZarinpour\Meloquent\Concerns;
 
+use ReflectionObject;
 use ReflectionProperty;
+use SajedZarinpour\Meloquent\Exceptions\InAccessibleFunctionCallException;
 
-trait hasCallableProperty {
+trait HasCallableProperty {
     use reportsError;
     /**
      * say you have a property like the following in your class:
@@ -13,16 +15,18 @@ trait hasCallableProperty {
      */
     public function __call($name, $arguments)
     {
-        if(is_callable($this->$name)) {
+
+        if(
+            (new ReflectionObject($this))->hasProperty($name) 
+            && is_callable($this->$name)
+        ) {
             return ($this->$name)(...$arguments);
             // not the same as: 
             //   $function = new ReflectionFunction($this->$name);
             //   return $function->invokeArgs($arguments);
             // try with an invokable class as the callable property and you'll see the difference
         } else {
-            // Note: value of $name is case sensitive.
-            // throw new Exception("Calling inaccessible object method '$name', params: " . implode(', ', $arguments). "\n");
-            $this->throws("Calling inaccessible object method '$name', params: " . implode(', ', $arguments). "\n");
+            throw new InAccessibleFunctionCallException($name, $arguments);
         }
     }
 
@@ -39,9 +43,6 @@ trait hasCallableProperty {
         $property = (new ReflectionProperty(static::class, $name))->getValue();
         if(is_callable($property)) {
             return ($property)(...$arguments);
-        } else {
-            // Note: value of $name is case sensitive.
-            static::throws("Calling inaccessible static method '$name' ". implode(', ', $arguments). "\n");
         }
     }
 }
