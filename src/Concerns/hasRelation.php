@@ -10,10 +10,22 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use ReflectionObject;
 use ReflectionProperty;
 
 trait HasRelation {
-    
+
+    public function __get($property) {
+        $reflectionOfClass = new ReflectionObject($this);    
+        $has = $reflectionOfClass->hasProperty($property); 
+        
+        if ($has) {
+            return $this->{$property};
+        } else if ($reflectionOfClass->hasMethod('get_')) {
+            return $this->get_($property);
+        }
+    }
+
     /**
      * gets the value of the field on the model similar to data_get,
      * but acts on object and all it's relations.
