@@ -2,6 +2,8 @@
 
 namespace SajedZarinpour\Meloquent\Providers;
 
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use SajedZarinpour\Meloquent\Meloquent;
 
@@ -16,6 +18,10 @@ class MeloquentServiceProvider extends ServiceProvider
         $this->app->bind('meloquent', function(){
             return new Meloquent([]);
         });
+
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/meloquent.php', 'meloquent'
+        );
     }
 
     /**
@@ -23,9 +29,27 @@ class MeloquentServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if($this->app->runningInConsole()) {
+            $this->registerPublishing();
+        }
+
+        /** listening when a query executes */
+        // DB::listen(function (QueryExecuted $query) {
+        //     $query->sql;
+        //     $query->bindings;
+        //     $query->time;
+        //     $query->toRawSql();
+        // });
+
+        // dd(config('meloquent.depth'));
+    }
+
+    protected function registerPublishing(): void
+    {
         /** package publishable files */
         $this->publishes([
-            __DIR__.'/../config/mellonquent.php' => config_path('mellonquent.php'),
-        ]);
+            __DIR__.'/../config/meloquent.php' => config_path('meloquent.php'),
+        ], 'meloquent-config');
     }
+
 }

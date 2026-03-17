@@ -27,7 +27,7 @@ class Meloquent {
 
     public function __construct(public ?array $priorityTable)
     {
-      $this->maxDepth = 6; //config('mellonquent.depth');
+      $this->maxDepth = config('meloquent.depth');
       
       if (empty($priorityTable)) {
         $this->priorityTable = [

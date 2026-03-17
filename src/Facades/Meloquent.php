@@ -23,4 +23,9 @@ class Meloquent extends Facade
     {
       return MeloquentClass::class;
     }
+
+    public static function swap($instance)
+    {
+      return parent::swap($instance);
+    }
 }

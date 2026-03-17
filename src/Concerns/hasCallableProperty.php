@@ -15,16 +15,11 @@ trait HasCallableProperty {
      */
     public function __call($name, $arguments)
     {
-
         if(
             (new ReflectionObject($this))->hasProperty($name) 
             && is_callable($this->$name)
         ) {
             return ($this->$name)(...$arguments);
-            // not the same as: 
-            //   $function = new ReflectionFunction($this->$name);
-            //   return $function->invokeArgs($arguments);
-            // try with an invokable class as the callable property and you'll see the difference
         } else {
             throw new InAccessibleFunctionCallException($name, $arguments);
         }
@@ -40,7 +35,10 @@ trait HasCallableProperty {
      */
     public static function __callStatic($name, $arguments)
     {
-        $property = (new ReflectionProperty(static::class, $name))->getValue();
+        $property = (
+            new ReflectionProperty(static::class, $name)
+        )->getValue();
+        
         if(is_callable($property)) {
             return ($property)(...$arguments);
         }

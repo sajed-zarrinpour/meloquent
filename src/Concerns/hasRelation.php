@@ -14,12 +14,12 @@ use ReflectionObject;
 use ReflectionProperty;
 
 trait HasRelation {
-
-    public function __get($property) {
-        $reflectionOfClass = new ReflectionObject($this);    
-        $has = $reflectionOfClass->hasProperty($property); 
+    
+    public function __get($property) 
+    {
+        $reflectionOfClass = new ReflectionObject($this);
         
-        if ($has) {
+        if ($reflectionOfClass->hasProperty($property)) {
             return $this->{$property};
         } else if ($reflectionOfClass->hasMethod('get_')) {
             return $this->get_($property);
