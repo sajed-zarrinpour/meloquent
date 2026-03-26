@@ -2,6 +2,7 @@
 
 namespace SajedZarinpour\Meloquent\Contracts;
 
-interface CommitsNotificationToDatabaseContract {
+interface CommitsNotificationToDatabaseContract 
+{
     public function commitNotificationToDB($attributes=[]);
 }

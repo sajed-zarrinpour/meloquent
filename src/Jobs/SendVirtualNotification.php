@@ -35,12 +35,9 @@ class SendVirtualNotification implements ShouldQueue
 
     public function handle()
     {
-        info('calles');
         // instantiate notification with primitive args
         $notification = new ($this->notificationClass)(...$this->notificationArgs);
 
-        // Process channels similarly to your virtual notify implementation,
-        // but pass $this->notifiableData as the "notifiable" context where needed.
         $channels = $notification->via((object)$this->notifiableData) ?? [];
 
         if (in_array('database', $channels, true)) {
@@ -75,7 +72,8 @@ class SendVirtualNotification implements ShouldQueue
         }
 
         // custom channels
-        $custom = array_filter($channels, fn($c) => $c !== 'database' && $c !== 'broadcast');
+        $custom = array_filter($channels, static fn($c) => $c !== 'database' && $c !== 'broadcast');
+        
         foreach ($custom as $channel) {
             if (class_exists($channel)) {
                 $chan = app($channel);

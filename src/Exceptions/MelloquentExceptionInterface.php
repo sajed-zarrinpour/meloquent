@@ -2,6 +2,7 @@
 
 namespace SajedZarinpour\Meloquent\Exceptions;
 
-interface MelloquentExceptionInterface {
+interface MelloquentExceptionInterface 
+{
     public function errorMessage();
 }
