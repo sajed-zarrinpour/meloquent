@@ -586,7 +586,7 @@ class Meloquent {
 
     public function sortNonPersistantRelationsMarkedByAttributes(array &$elemenets)
     {
-        return uasort($elemenets, 'Meloquent::sortByPriority');
+        return uasort($elemenets, $this::class.'::sortByPriority');
     }
 
     public function getsortNonPersistantRelationsMarkedByAttributesPriorityTable()
