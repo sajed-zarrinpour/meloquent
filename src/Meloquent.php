@@ -1,12 +1,10 @@
 <?php
 namespace SajedZarinpour\Meloquent;
 
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
-
-use Exception;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,15 +13,33 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use ReflectionMethod;
 
+use ReflectionMethod;
+use Exception;
+use ReflectionObject;
+use SajedZarinpour\Meloquent\Attributes\MarkedAs;
 use SajedZarinpour\Meloquent\DTOs\RelationFieldInfoDto;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsBelongsTo;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsBelongsToMany;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsHasMany;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsHasManyThrough;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsHasOne;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsHasOneOrMany;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsHasOneOrManyThrough;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsHasOneThrough;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsMorphMany;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsMorphOne;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsMorphOneOrMany;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsMorphTo;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsMorphToMany;
+
 /**
  * wrote with a decent amount of heavy metal
  */
 class Meloquent {
 
     protected int $maxDepth;
+    protected array $sortNonPersistantRelationsMarkedByAttributesPriorityTable;
 
     public function __construct(public ?array $priorityTable)
     {
@@ -393,10 +409,11 @@ class Meloquent {
                 $relation = $model->{$method}();
 
                 if (! $relation instanceof Relation) {
-                    continue;
+                    // was continue;
+                    $results = $relation;
+                } else {
+                    $results = $model->{$method};
                 }
-
-                $results = $model->{$method};
 
                 if (! $results) {
                     continue;
@@ -492,6 +509,94 @@ class Meloquent {
             $flatList = array_merge($flatList, $relations[$key]??[]);
         }
 
+        // also virtual relations if any
+        $virtualRelations = $this->getModelRelationAttributes($model);
+
+        if (sizeof($virtualRelations)) {
+            $this->sortNonPersistantRelationsMarkedByAttributes($virtualRelations);
+            $flatList = array_merge($flatList, $this->extractMethods($virtualRelations));
+        }
+
         return $flatList;
+    }
+
+    public function getModelRelationAttributes(Model $model): array
+    {
+        $reflection = new ReflectionObject($model);
+        $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
+        $list = [];
+        
+        foreach ($methods as $method) {
+            $attributes = $method->getAttributes();
+            if (count($attributes)>0) {
+
+                $attrs = array_filter($attributes, static function ($attribute) {
+                    return match ($attribute->name) {
+                        MarkedAsBelongsTo::class,
+                        MarkedAsBelongsToMany::class,
+                        MarkedAsHasMany::class,
+                        MarkedAsHasManyThrough::class,
+                        MarkedAsHasOne::class,
+                        MarkedAsHasOneOrMany::class,
+                        MarkedAsHasOneOrManyThrough::class,
+                        MarkedAsHasOneThrough::class,
+                        MarkedAsMorphMany::class,
+                        MarkedAsMorphOne::class,
+                        MarkedAsMorphOneOrMany::class,
+                        MarkedAsMorphTo::class,
+                        MarkedAsMorphToMany::class=>true,
+                        default => false,
+                    };
+                });
+
+                if (sizeof($attrs)>0) {
+                    $list [] = [
+                        'method' => $method,
+                        'relations'=>$attrs
+                    ];
+                }
+                
+            }
+        }
+
+        return $list;
+    }
+
+    protected function extractMethods(array $list)
+    {
+        $extracted = [];
+        foreach ($list as $item) {
+            $extracted []= $item['method']->name;
+        }
+        return $extracted;
+    }
+
+    public function sortByPriority($a, $b)
+    {
+        return array_search(
+                array_first($a['relations'])->name, 
+                $this->sortNonPersistantRelationsMarkedByAttributesPriorityTable
+            ) 
+            <=> 
+            array_search(
+                array_first($b['relations'])->name, 
+                $this->sortNonPersistantRelationsMarkedByAttributesPriorityTable
+            );
+    }
+
+    public function sortNonPersistantRelationsMarkedByAttributes(array &$elemenets)
+    {
+        return uasort($elemenets, 'Meloquent::sortByPriority');
+    }
+
+    public function getsortNonPersistantRelationsMarkedByAttributesPriorityTable()
+    {
+        $prefix = MarkedAs::class;
+        $table = [];
+        foreach ($this->priorityTable as $row) {
+            $posix = array_last(explode('\\',$row));
+            $table [] = $prefix.$posix;
+        }
+        $this->sortNonPersistantRelationsMarkedByAttributesPriorityTable = $table;
     }
 }
