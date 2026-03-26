@@ -2,8 +2,6 @@
 
 namespace SajedZarinpour\Meloquent\Providers;
 
-use Illuminate\Database\Events\QueryExecuted;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use SajedZarinpour\Meloquent\Meloquent;
 
@@ -50,6 +48,10 @@ class MeloquentServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/meloquent.php' => config_path('meloquent.php'),
         ], 'meloquent-config');
+
+        $this->publishes([
+            __DIR__.'/../Models/BaseNonPersistanceModel.php'
+        ], 'BaseNonPersistanceModel');
     }
 
 }
