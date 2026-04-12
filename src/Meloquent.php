@@ -38,12 +38,12 @@ use SajedZarinpour\Meloquent\Attributes\MarkedAsMorphToMany;
  */
 class Meloquent {
 
-    protected int $maxDepth;
-    protected array $sortNonPersistantRelationsMarkedByAttributesPriorityTable;
+    public protected(set) int $maxDepth;
+    public protected(set) array $sortNonPersistantRelationsMarkedByAttributesPriorityTable;
 
     public function __construct(public ?array $priorityTable)
     {
-      $this->maxDepth = config('meloquent.depth');
+      $this->maxDepth = 6;//config('meloquent.depth', 6);
       
       if (empty($priorityTable)) {
         $this->priorityTable = [
