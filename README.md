@@ -303,3 +303,60 @@ Agent::find(1);
 // same syntax, but it also adds data in cache
 Agent::create([...]);
 ```
+### Virtual Relations
+Your model might be in relation with other models which are coming from an api. In order to define relations in such scenario you can use attributes:
+```php
+use SajedZarinpour\Meloquent\traits\hasRelation;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsHasMany;
+
+class Parent extends Model 
+{
+    use hasRelation;
+
+    protected $fillable = [
+        'id',
+        'name',
+    ];
+
+    #[MarkedAsHasMany]
+    public function child()
+    {
+        // return a collection of child models based on your api logic
+        // for example
+        return Child::where('parent_id', '=', $this->id);
+    }
+}
+
+//
+
+use App\Repositories\NonPersistanceModelRepository;
+use SajedZarinpour\Meloquent\Models\BaseNonPersistanceModel;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsBelongsTo;
+
+class Child extends BaseNonPersistanceModel 
+{
+    use hasRelation;
+
+    protected static $repositioryClass = NonPersistanceModelRepository::class;
+
+    protected $fillable = [
+        'id',
+        'message',
+        'parent_id',
+    ];
+
+
+    protected $pKey = [
+        'field' => 'id',
+        'type' => 'int',
+    ];
+
+    #[MarkedAsBelongsTo]
+    public function parent()
+    {
+        // return an instance of parent based on your app logic
+        // for example
+        return Parent::find($this->parent_id);
+    }
+}
+```
