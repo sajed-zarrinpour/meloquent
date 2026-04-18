@@ -4,6 +4,7 @@ namespace SajedZarinpour\Meloquent\Concerns\NonPersistanceConcerns;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use SajedZarinpour\Meloquent\Contracts\AccessRepositoryContract;
+use SajedZarinpour\Meloquent\Exceptions\BreakingContractCallException;
 
 trait DataFetching {
 
@@ -23,7 +24,7 @@ trait DataFetching {
             if (
                 ! static::accessesData()
             ) {
-                throw new \Exception(static::class . ' Does not implements '. AccessRepositoryContract::class);
+                throw new BreakingContractCallException(static::class, AccessRepositoryContract::class);
             }
             $data = static::getUserDefinedDataRepositoryReflectionAttribute()->newInstance()->find($id);
 
@@ -128,7 +129,7 @@ trait DataFetching {
             if (
                 ! static::accessesData()
             ) {
-                throw new \Exception(static::class . ' Does not implements '. AccessRepositoryContract::class);
+                throw new BreakingContractCallException(static::class, AccessRepositoryContract::class);
             }
             
             return static::getUserDefinedDataRepositoryReflectionAttribute()->newInstance()->where($column, $operator, $value, $boolean);

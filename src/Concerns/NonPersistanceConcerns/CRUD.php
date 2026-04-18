@@ -3,6 +3,7 @@ namespace SajedZarinpour\Meloquent\Concerns\NonPersistanceConcerns;
 
 use SajedZarinpour\Meloquent\Contracts\AccessRepositoryContract;
 use SajedZarinpour\Meloquent\Contracts\MutateDataRepositoryContract;
+use SajedZarinpour\Meloquent\Exceptions\BreakingContractCallException;
 
 trait CRUD {
     use Metadata;
@@ -12,7 +13,7 @@ trait CRUD {
         if (static::mutatesData()) {
             return static::getDataManipulationService()->create($attributes);
         } else {
-            throw new \Exception(static::class . ' Does not implements '. MutateDataRepositoryContract::class);
+            throw new BreakingContractCallException(static::class, MutateDataRepositoryContract::class);
         }
     }
     /**
@@ -23,7 +24,7 @@ trait CRUD {
         if ($this->mutatesData()) {
             return $this->getDataManipulationService()->update($options);
         } else {
-            throw new \Exception(static::class . ' Does not implements '. MutateDataRepositoryContract::class);
+            throw new BreakingContractCallException(static::class, MutateDataRepositoryContract::class);
         }
     }
 
@@ -35,7 +36,7 @@ trait CRUD {
         if ($this->mutatesData()) {
             return $this->getDataManipulationService()->delete($this->{$this->pKey['field']});
         } else {
-            throw new \Exception(static::class . ' Does not implements '. MutateDataRepositoryContract::class);
+            throw new BreakingContractCallException(static::class, MutateDataRepositoryContract::class);
         }
     }
 
@@ -47,7 +48,7 @@ trait CRUD {
         if ($this->accessesData()) {
             return $this->getDataManipulationService()->refresh($this->{$this->pKey['field']});
         } else {
-            throw new \Exception(static::class . ' Does not implements '. AccessRepositoryContract::class);
+            throw new BreakingContractCallException(static::class, AccessRepositoryContract::class);
         }
     }
 
