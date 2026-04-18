@@ -2,7 +2,6 @@
 
 namespace SajedZarinpour\Meloquent\Facades;
 
-use Closure;
 use Illuminate\Support\Facades\Facade;
 use SajedZarinpour\Meloquent\Meloquent as MeloquentClass;
 
