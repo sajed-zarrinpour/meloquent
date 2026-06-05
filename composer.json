@@ -40,7 +40,21 @@
         }
     },
     "require": {
-        "ext-curl": "*"
+    "php": "^8.0",
+    "ext-curl": "*"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^7.0",
+    "pestphp/pest": "^1.0",
+    "pestphp/pest-plugin": "^1.0",
+    "nunomaduro/collision": "^7.0"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "SajedZarinpour\\Meloquent\\Tests\\": "tests/"
     }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
     
 }
