@@ -41,13 +41,10 @@ jobs:
         cp .env.example .env || true
         php -r "if (!file_exists('.env')) file_put_contents('.env', \"DB_CONNECTION=sqlite\nDB_DATABASE=:memory:\n\");"
 
-    - name: Run tests (Pest or PHPUnit)
+    - name: Run PHPUnit
       run: |
-        if [ -f vendor/bin/pest ]; then
-          pwd; ls;
-          vendor/bin/pest --colors=always
-        elif [ -f vendor/bin/phpunit ]; then
+        if [ -f vendor/bin/phpunit ]; then
           vendor/bin/phpunit --colors=always
         else
-          echo "No test runner found (vendor/bin/pest or vendor/bin/phpunit)"; exit 1
+          echo "vendor/bin/phpunit not found"; exit 1
         fi
