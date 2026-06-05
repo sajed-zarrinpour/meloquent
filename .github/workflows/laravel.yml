@@ -44,7 +44,7 @@ jobs:
     - name: Run PHPUnit
       run: |
         if [ -f vendor/bin/phpunit ]; then
-          vendor/bin/phpunit --colors=always
+          vendor/bin/phpunit tests/ --colors=always
         else
           echo "vendor/bin/phpunit not found"; exit 1
         fi
