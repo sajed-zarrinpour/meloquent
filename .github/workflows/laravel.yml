@@ -1,4 +1,4 @@
-name: laravel
+name: Laravel Package CI
 
 on:
   push:
@@ -10,16 +10,23 @@ jobs:
   laravel-tests:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: .
+
+    strategy:
+      matrix:
+        php-version: [8.0]
+
     steps:
     - uses: actions/checkout@v4
 
     - name: Set up PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: 8.0
-        coverage: none
+        php-version: ${{ matrix.php-version }}
 
-    - name: Get composer cache
+    - name: Cache Composer
       uses: actions/cache@v4
       with:
         path: ~/.composer/cache
@@ -32,14 +39,14 @@ jobs:
     - name: Prepare environment
       run: |
         cp .env.example .env || true
-        # Ensure tests use in-memory sqlite by default if phpunit.xml/env not set
-        php -r "file_exists('.env') || file_put_contents('.env', \"DB_CONNECTION=sqlite\nDB_DATABASE=:memory:\n\");"
+        php -r "if (!file_exists('.env')) file_put_contents('.env', \"DB_CONNECTION=sqlite\nDB_DATABASE=:memory:\n\");"
 
-    - name: Create Database
+    - name: Run tests (Pest or PHPUnit)
       run: |
-        mkdir -p database
-        touch database/database.sqlite
-        
-    - name: Run tests (with composer)
-      run: |
-        composer test
+        if [ -f vendor/bin/pest ]; then
+          vendor/bin/pest --colors=always
+        elif [ -f vendor/bin/phpunit ]; then
+          vendor/bin/phpunit --colors=always
+        else
+          echo "No test runner found (vendor/bin/pest or vendor/bin/phpunit)"; exit 1
+        fi
