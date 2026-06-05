@@ -44,6 +44,7 @@ jobs:
     - name: Run tests (Pest or PHPUnit)
       run: |
         if [ -f vendor/bin/pest ]; then
+          pwd; ls;
           vendor/bin/pest --colors=always
         elif [ -f vendor/bin/phpunit ]; then
           vendor/bin/phpunit --colors=always
