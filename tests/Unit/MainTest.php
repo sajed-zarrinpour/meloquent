@@ -2,23 +2,12 @@
 
 namespace Tests\Unit;
 
-use Closure;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\QueryException;
 use PHPUnit\Framework\TestCase;
-use SajedZarinpour\Meloquent\Concerns\HasRelation;
 use SajedZarinpour\Meloquent\Facades\Meloquent as FacadesMeloquent;
 use SajedZarinpour\Meloquent\Meloquent;
 
-use Illuminate\Foundation\Testing\RefreshDatabase; // to refresh the db after runing tests
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
-
 class MainTest extends TestCase
 {
-    // use RefreshDatabase;
-    use DatabaseMigrations;
-    use DatabaseTruncation;
     
     /**
      * A basic test example.
