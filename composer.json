@@ -44,11 +44,10 @@
     "ext-curl": "*"
   },
   "require-dev": {
-    "orchestra/testbench": "^7.0",
-    "pestphp/pest": "^1.0",
-    "pestphp/pest-plugin": "^1.0",
-    "nunomaduro/collision": "^7.0"
-  },
+      "orchestra/testbench": "^7.0",
+      "phpunit/phpunit": "^10.0",
+      "nunomaduro/collision": "^7.0"
+    },
   "autoload-dev": {
     "psr-4": {
       "SajedZarinpour\\Meloquent\\Tests\\": "tests/"
