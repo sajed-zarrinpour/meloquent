@@ -35,10 +35,11 @@ jobs:
         # Ensure tests use in-memory sqlite by default if phpunit.xml/env not set
         php -r "file_exists('.env') || file_put_contents('.env', \"DB_CONNECTION=sqlite\nDB_DATABASE=:memory:\n\");"
 
-    - name: Run tests (Pest or PHPUnit)
+    - name: Create Database
       run: |
-        if [ -f vendor/bin/pest ]; then
-          vendor/bin/pest --colors=always
-        else
-          vendor/bin/phpunit --colors=always
-        fi
+        mkdir -p database
+        touch database/database.sqlite
+        
+    - name: Run tests (with composer)
+      run: |
+        composer test
