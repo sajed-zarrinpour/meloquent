@@ -40,8 +40,7 @@
         }
     },
     "require": {
-    "php": "^8.0",
-    "ext-curl": "*"
+      "ext-curl": "*"
   },
   "require-dev": {
         "fakerphp/faker": "^1.23",
