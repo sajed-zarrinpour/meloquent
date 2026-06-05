@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use SajedZarinpour\Meloquent\Facades\Meloquent as FacadesMeloquent;
 use SajedZarinpour\Meloquent\Meloquent;
 use SajedZarinpour\Meloquent\Concerns\HasRelation;
+use SajedZarinpour\Meloquent\Models\BaseNonPersistanceModel
 
 class MainTest extends TestCase
 {
@@ -31,8 +32,8 @@ class MainTest extends TestCase
     {
 
         $parentModelFactory = function() {
-            return new class extends \SajedZarinpour\Meloquent\Models\BaseNonPersistanceModel{
-                use \SajedZarinpour\Meloquent\Concerns\HasRelation;
+            return new class extends BaseNonPersistanceModel{
+                use HasRelation;
                 public static int $idGenerator = 1;
 
                 public $c;
@@ -73,8 +74,8 @@ class MainTest extends TestCase
         };
     
         $childModelFactory = function() {
-            return new class extends \SajedZarinpour\Meloquent\Models\BaseNonPersistanceModel{
-                use \SajedZarinpour\Meloquent\Concerns\HasRelation;
+            return new class extends BaseNonPersistanceModel{
+                use HasRelation;
                 public static int $idGenerator = 1;
 
                 protected $fillable = [
