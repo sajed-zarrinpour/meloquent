@@ -6,7 +6,9 @@ use PHPUnit\Framework\TestCase;
 use SajedZarinpour\Meloquent\Facades\Meloquent as FacadesMeloquent;
 use SajedZarinpour\Meloquent\Meloquent;
 use SajedZarinpour\Meloquent\Concerns\HasRelation;
-use SajedZarinpour\Meloquent\Models\BaseNonPersistanceModel
+use SajedZarinpour\Meloquent\Models\BaseNonPersistanceModel;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsHasMany;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsBelongsTo;
 
 class MainTest extends TestCase
 {
@@ -59,7 +61,7 @@ class MainTest extends TestCase
                     $this->c = $c;
                 }
     
-                #[\SajedZarinpour\Meloquent\Attributes\MarkedAsHasMany]
+                #[MarkedAsHasMany]
                 public function child() 
                 {
                     // return $this->hasMany($this->c::class, 'id');
@@ -102,7 +104,7 @@ class MainTest extends TestCase
                     $this->p = $p;
                 }
     
-                #[\SajedZarinpour\Meloquent\Attributes\MarkedAsBelongsTo]
+                #[MarkedAsBelongsTo]
                 public function parent() {
                     // return $this->belongsTo($this->p::class, 'parent_id');
                     return $this->p;
