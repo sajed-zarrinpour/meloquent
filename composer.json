@@ -7,8 +7,13 @@
         "library",
         "mellonquent"
     ],
-    "homepage": "",
+    "homepage": "https://github.com/sajed-zarrinpour/meloquent/",
     "support": {
+        "issues": "https://github.com/sajed-zarrinpour/meloquent/issues",
+        "source": "https://github.com/sajed-zarrinpour/meloquent/",
+        "docs": "https://github.com/sajed-zarrinpour/meloquent/",
+        "rss": "https://github.com/sajed-zarrinpour/meloquent/releases.atom",
+        "security": "https://github.com/sajed-zarrinpour/meloquent/security/advisories"
     },
     "autoload": {
         "psr-4": {
