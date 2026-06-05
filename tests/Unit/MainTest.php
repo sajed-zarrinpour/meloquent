@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use PHPUnit\Framework\TestCase;
 use SajedZarinpour\Meloquent\Facades\Meloquent as FacadesMeloquent;
 use SajedZarinpour\Meloquent\Meloquent;
+use SajedZarinpour\Meloquent\Concerns\HasRelation;
 
 class MainTest extends TestCase
 {
