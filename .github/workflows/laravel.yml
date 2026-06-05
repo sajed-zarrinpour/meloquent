@@ -41,6 +41,9 @@ jobs:
         cp .env.example .env || true
         php -r "if (!file_exists('.env')) file_put_contents('.env', \"DB_CONNECTION=sqlite\nDB_DATABASE=:memory:\n\");"
 
+    - name: Class Discovery
+      run: composer dump-autoload
+      
     - name: Run PHPUnit
       run: |
         if [ -f vendor/bin/phpunit ]; then
