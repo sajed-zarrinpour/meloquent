@@ -2,23 +2,16 @@
 
 namespace Tests\Unit;
 
-use Closure;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\QueryException;
 use PHPUnit\Framework\TestCase;
-use SajedZarinpour\Meloquent\Concerns\HasRelation;
 use SajedZarinpour\Meloquent\Facades\Meloquent as FacadesMeloquent;
 use SajedZarinpour\Meloquent\Meloquent;
-
-use Illuminate\Foundation\Testing\RefreshDatabase; // to refresh the db after runing tests
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
+use SajedZarinpour\Meloquent\Concerns\HasRelation;
+use SajedZarinpour\Meloquent\Models\BaseNonPersistanceModel;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsHasMany;
+use SajedZarinpour\Meloquent\Attributes\MarkedAsBelongsTo;
 
 class MainTest extends TestCase
 {
-    // use RefreshDatabase;
-    use DatabaseMigrations;
-    use DatabaseTruncation;
     
     /**
      * A basic test example.
@@ -41,8 +34,8 @@ class MainTest extends TestCase
     {
 
         $parentModelFactory = function() {
-            return new class extends \SajedZarinpour\Meloquent\Models\BaseNonPersistanceModel{
-                use \SajedZarinpour\Meloquent\Concerns\HasRelation;
+            return new class extends BaseNonPersistanceModel{
+                use HasRelation;
                 public static int $idGenerator = 1;
 
                 public $c;
@@ -68,7 +61,7 @@ class MainTest extends TestCase
                     $this->c = $c;
                 }
     
-                #[\SajedZarinpour\Meloquent\Attributes\MarkedAsHasMany]
+                #[MarkedAsHasMany]
                 public function child() 
                 {
                     // return $this->hasMany($this->c::class, 'id');
@@ -83,8 +76,8 @@ class MainTest extends TestCase
         };
     
         $childModelFactory = function() {
-            return new class extends \SajedZarinpour\Meloquent\Models\BaseNonPersistanceModel{
-                use \SajedZarinpour\Meloquent\Concerns\HasRelation;
+            return new class extends BaseNonPersistanceModel{
+                use HasRelation;
                 public static int $idGenerator = 1;
 
                 protected $fillable = [
@@ -111,7 +104,7 @@ class MainTest extends TestCase
                     $this->p = $p;
                 }
     
-                #[\SajedZarinpour\Meloquent\Attributes\MarkedAsBelongsTo]
+                #[MarkedAsBelongsTo]
                 public function parent() {
                     // return $this->belongsTo($this->p::class, 'parent_id');
                     return $this->p;

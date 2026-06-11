@@ -15,7 +15,7 @@ class Redis
     )
     {}
 
-    public function get($key)
+    public function get(string $key)
     {
         $result = match ($this->alg) {
             RedisTypesEnum::STRING => $this->getString($key),
@@ -26,23 +26,27 @@ class Redis
         return $result;
     }
 
-    public function set($key, Model $value)
+    public function set(string $key, Model $value)
     {
-        match ($this->alg) {
+        $result = match ($this->alg) {
             RedisTypesEnum::STRING => $this->setString($key,$value),
             RedisTypesEnum::HASH => $this->setHash($key, $value),
-            default => null,
+            default => false,
         };
         
-        FacadesRedis::expire($this->modelFqn.$key, $this->ttl);
+        if ($result) {
+            FacadesRedis::expire($this->modelFqn.$key, $this->ttl);
+        }
+
+        return $result;
     }
 
-    public function forget($key)
+    public function forget(string $key)
     {
         return FacadesRedis::del($this->modelFqn.$key);
     }
 
-    private function getString($key)
+    private function getString(string $key)
     {
         $value =  json_decode(FacadesRedis::get($this->modelFqn.$key));
         if (!empty($value)) {
@@ -54,7 +58,7 @@ class Redis
         return null;
     }
 
-    private function getHash($key)
+    private function getHash(string $key)
     {
 
         $value =  FacadesRedis::hgetall($this->modelFqn.$key);
@@ -67,13 +71,13 @@ class Redis
         return null;
     }
 
-    private function setString($key, Model $value)
+    private function setString(string $key, Model $value)
     {
-        FacadesRedis::set($this->modelFqn.$key, json_encode($value));
+        return FacadesRedis::set($this->modelFqn.$key, json_encode($value));
     }
 
-    private function setHash($key, Model $value)
+    private function setHash(string $key, Model $value)
     {
-        FacadesRedis::hmset($this->modelFqn.$key, $value->toArray());
+        return FacadesRedis::hmset($this->modelFqn.$key, $value->toArray());
     }
 }

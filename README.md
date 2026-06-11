@@ -301,8 +301,12 @@ then
 // same syntax, but it automatically search for result in cache first
 Agent::find(1);
 // same syntax, but it also adds data in cache
-Agent::create([...]);
+$instance = Agent::create([...]);
+$instance->name = 'jack';
+$instance->save();
 ```
+>[Note] Since your models are not backed by the database natively, you have to provide the id when you are creating an instance.
+
 ### Virtual Relations
 Your model might be in relation with other models which are coming from an api. In order to define relations in such scenario you can use attributes:
 ```php
