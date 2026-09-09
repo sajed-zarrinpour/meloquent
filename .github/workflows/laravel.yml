@@ -1,0 +1,53 @@
+name: Laravel Package CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: .
+
+    strategy:
+      matrix:
+        php-version: [8.4]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+
+    - name: Cache Composer
+      uses: actions/cache@v4
+      with:
+        path: ~/.composer/cache
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: ${{ runner.os }}-composer-
+
+    - name: Install dependencies (including dev)
+      run: composer install --no-interaction --no-progress
+
+    - name: Prepare environment
+      run: |
+        cp .env.example .env || true
+        php -r "if (!file_exists('.env')) file_put_contents('.env', \"DB_CONNECTION=sqlite\nDB_DATABASE=:memory:\n\");"
+
+    - name: Class Discovery
+      run: composer dump-autoload
+      
+    - name: Run PHPUnit
+      run: |
+        if [ -f vendor/bin/phpunit ]; then
+          vendor/bin/phpunit tests/ --colors=always
+        else
+          echo "vendor/bin/phpunit not found"; exit 1
+        fi

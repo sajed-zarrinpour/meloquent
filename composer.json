@@ -7,8 +7,13 @@
         "library",
         "mellonquent"
     ],
-    "homepage": "",
+    "homepage": "https://github.com/sajed-zarrinpour/meloquent/",
     "support": {
+        "issues": "https://github.com/sajed-zarrinpour/meloquent/issues",
+        "source": "https://github.com/sajed-zarrinpour/meloquent/",
+        "docs": "https://github.com/sajed-zarrinpour/meloquent/",
+        "rss": "https://github.com/sajed-zarrinpour/meloquent/releases.atom",
+        "security": "https://github.com/sajed-zarrinpour/meloquent/security/advisories"
     },
     "autoload": {
         "psr-4": {
@@ -35,7 +40,21 @@
         }
     },
     "require": {
-        "ext-curl": "*"
+      "ext-curl": "*"
+  },
+  "require-dev": {
+        "fakerphp/faker": "^1.23",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.6",
+        "phpunit/phpunit": "^11.5.3",
+        "laravel/framework": "^13.0" 
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "SajedZarinpour\\Meloquent\\Tests\\": "tests/"
     }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
     
 }
